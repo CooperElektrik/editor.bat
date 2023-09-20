@@ -11,18 +11,37 @@ if not exist "%filename%" (
   type nul >> %filename%
 )
 
+echo. >> temp
 type "%filename%"
 
 :edit
 cls
 set input=""
 type "%filename%"
-set /p input=*newline: 
+type temp
+set /p input=
 
 if !input! == "" (
-  echo. >> "%filename%"
+  echo. >> temp
   goto edit
 )
-echo !input! >> "%filename%"
+rem Commands
+
+if "!input!" == ":E" (
+  echo Exitting.
+  goto eof
+)
+if "!input!" == ":S" (
+  echo Writing contents to main file.
+  type temp >> "%filename%"
+  rem Clears the temp file.
+  type nul > temp & echo. >> temp
+  goto edit
+)
+
+echo !input! >> temp
 
 goto edit
+
+:eof
+del temp
