@@ -8,6 +8,7 @@ set /p filename=
 
 if not exist "%filename%" (
   echo File does not exist. Creating one now.
+  pause
   type nul >> %filename%
 )
 
@@ -26,19 +27,50 @@ if !input! == "" (
   goto edit
 )
 rem Commands
-
-if "!input!" == ":E" (
-  echo Exitting.
-  goto eof
-)
-if "!input!" == ":S" (
-  echo Writing contents to main file.
-  type temp >> "%filename%"
-  rem Clears the temp file.
-  type nul > temp & echo. >> temp
-  goto edit
+if "%input:~0,1%" == ":" (
+  goto %input%
+) else (
+  goto output
 )
 
+:exit
+echo Exitting.
+goto eof
+
+:save
+echo Writing contents to main file.
+type temp >> "%filename%"
+goto clear
+
+:clear
+echo Clearing temp file.
+type nul > temp & echo. >> temp
+pause
+goto edit
+
+:cmd
+echo Executing a potentially dangerous command...
+set "command=!input:~5!"
+call "command.bat"
+pause
+goto edit
+
+rem Record macro
+:marec
+set /p marec-name="Macro(s) name: "
+for %%V in (!marec-name!) do (
+  set /p marec-cont="%%V content: "
+  set %%V=!marec-cont!
+  echo %%V=!%%V!>> macro
+  echo|set /p="%%V " >> macro-index
+)
+goto edit
+
+rem WIP: Outputting macros
+:macro
+goto output
+
+:output
 echo !input! >> temp
 
 goto edit
