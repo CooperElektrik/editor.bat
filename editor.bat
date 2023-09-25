@@ -34,10 +34,12 @@ if "%input:~0,1%" == ":" (
 )
 
 :exit
+:q
 echo Exitting.
 goto eof
 
 :save
+:s
 echo Writing contents to main file.
 type temp >> "%filename%"
 goto clear
@@ -68,7 +70,16 @@ goto edit
 
 rem WIP: Outputting macros
 :macro
-goto output
+set "macro-input=!input:~7!"
+call macro.bat
+for /f "usebackq tokens=*" %%A in ("macro-temp") do (
+    if !lineNum! equ 1 (
+        set "macro-content=%%A"
+    )
+)
+type macro-temp >> temp
+del macro-temp
+goto edit
 
 :output
 echo !input! >> temp
