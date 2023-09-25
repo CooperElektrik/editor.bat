@@ -27,8 +27,8 @@ if !input! == "" (
   goto edit
 )
 rem Commands
-if "%input:~0,1%" == ":" (
-  goto %input%
+if "!input:~0,1!" == ":" (
+  goto !input!
 ) else (
   goto output
 )
