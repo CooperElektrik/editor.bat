@@ -2,6 +2,7 @@
 setlocal EnableDelayedExpansion
 :start
 cls
+ls
 echo Enter the name of the file to edit:
 
 set /p filename=
@@ -19,11 +20,12 @@ type "%filename%"
 cls
 set input=""
 type "%filename%"
+echo --- Unsaved region ---
 type temp
 set /p input=
 
 if !input! == "" (
-  echo. >> temp
+  echo.>> temp
   goto edit
 )
 rem Commands
@@ -49,6 +51,11 @@ echo Clearing temp file.
 type nul > temp & echo. >> temp
 pause
 goto edit
+
+:: :modify
+:: call modify.bat
+:: pause
+:: goto edit
 
 :cmd
 echo Executing a potentially dangerous command...
